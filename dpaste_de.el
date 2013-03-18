@@ -52,7 +52,7 @@
 ;;; Code:
 (require 'web)
 
-(defcustom paste-host "dpaste.de" "dpaste hostname")
+(defvar paste-host "dpaste.de" "dpaste hostname")
 
 (defun dpaste-region (start end)
   (interactive "r")
@@ -65,7 +65,7 @@
 	   (kill-ring-save (+ (point-min) 1) (- (point-max) 1))
 	   (clipboard-kill-region (+ (point-min) 1) (- (point-max) 1))
 	   (kill-buffer)))
-       "/api/"
+       :url "/api/"
        :host paste-host
        :data `(("content" . ,buffer-contents))))))
 
