@@ -65,7 +65,7 @@
 	   (kill-ring-save (+ (point-min) 1) (- (point-max) 1))
 	   (clipboard-kill-region (+ (point-min) 1) (- (point-max) 1))
 	   (kill-buffer)))
-       :url "/api/"
+       :path "/api/"
        :host paste-host
        :data `(("content" . ,buffer-contents))))))
 
