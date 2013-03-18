@@ -1,4 +1,4 @@
-;;; dpaste_de.el --- Pastebin into dpaste.de
+;;; dpaste_de.el --- Emacs mode to paste to dpaste.de
 
 ;; Copyright (c) 2013 Thejaswi Puthraya
 
