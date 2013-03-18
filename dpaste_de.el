@@ -1,4 +1,4 @@
-;;; dpaste_de.el -- Pastebin into dpaste.de
+;;; dpaste_de.el --- Pastebin into dpaste.de
 
 ;; Copyright (c) 2013 Thejaswi Puthraya
 
