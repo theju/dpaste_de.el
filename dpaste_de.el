@@ -78,4 +78,6 @@
   (with-current-buffer (get-buffer buffer-name)
     (dpaste-buffer)))
 
+(provide 'dpaste_de)
+
 ;;; dpaste_de.el ends here
