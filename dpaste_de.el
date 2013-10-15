@@ -4,8 +4,8 @@
 
 ;; Author: Thejaswi Puthraya <thejaswi.puthraya@gmail.com>
 ;; Created: 18 Mar 2013
-;; Version: 0.1
-;; Package-Requires: ((web "0.3.6"))
+;; Version: 0.2
+;; Package-Requires: ((web "0.3.7"))
 ;; Keywords: pastebin
 
 ;; This file is not part of GNU Emacs.
@@ -28,36 +28,39 @@
 ;; (require 'dpaste_de)
 ;;
 ;; (dpaste-buffer)
-;;
 ;; The url is copied into your clipboard and kill ring
 ;;
 ;; On a region
-;;
 ;; (require 'dpaste_de)
-;;
 ;; (dpaste-region)
 ;;
 ;; Dpaste a buffer by specifying a name
-;;
 ;; (require 'dpaste_de)
-;;
 ;; (dpaste-buffer-with-name "*scratch*")
 ;;
 ;; Special thanks to Martin Mahner (https://github.com/bartTC) for running dpaste.de
 
 ;;; Change Log: 
 
+;; 0.2 - Fixes for the latest web.el
 ;; 0.1 - Initial commit and push into melpa
 
 ;;; Code:
 (require 'web)
 
+(defvar version 0.2 "dpaste version")
 (defvar paste-host "dpaste.de" "dpaste hostname")
+(defvar user-agent
+  (concat "dpaste_de.el/"
+	  (number-to-string version))
+  "dpaste user agent")
 
 (defun dpaste-region (start end)
   (interactive "r")
   (with-current-buffer (current-buffer)
-    (let ((buffer-contents (buffer-substring-no-properties start end)))
+    (let ((buffer-contents (buffer-substring-no-properties start end))
+	  (query-data (make-hash-table :test 'equal)))
+      (puthash 'content buffer-contents query-data)
       (web-http-post
        (lambda (con header data)
 	 (with-current-buffer (get-buffer-create "*dpaste-output*")
@@ -65,9 +68,10 @@
 	   (kill-ring-save (+ (point-min) 1) (- (point-max) 1))
 	   (clipboard-kill-region (+ (point-min) 1) (- (point-max) 1))
 	   (kill-buffer)))
-       :path "/api/"
-       :host paste-host
-       :data `(("content" . ,buffer-contents))))))
+       :url (concat "https://" paste-host "/api/")
+       :extra-headers `((Content-Type . "application/x-www-form-urlencoded")
+			(User-Agent . ,user-agent))
+       :data query-data))))
 
 (defun dpaste-buffer ()
   (interactive)
